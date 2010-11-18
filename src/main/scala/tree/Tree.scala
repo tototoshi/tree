@@ -10,10 +10,13 @@ object Tree extends Application {
   private var dirNum = 0;
   private var fileNum = 0;
 
+
+
+
   private def tree(dir: File, branch: String): List[String] = {
     var curStr:List[String] = Nil
     val files = dir.listFiles.toList.
-                filter(!_.getName.startsWith(".")).reverse
+                remove(_.getName.startsWith(".")).reverse
 
     for (i <- 0 until files.length) {
       val name = files(i).getName
