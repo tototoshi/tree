@@ -52,8 +52,9 @@ object Tree extends Application {
   override def main(args: Array[String]): Unit = {
     try {
       val treeList = tree(new File(args(0)), "") ::: List(".")
-      println(treeList.reverse.mkString("\n") +
-              "\n\n%d directories, %d files".format(dirNum, fileNum))
+      println(treeList.reverse.mkString("\n"))
+      println("")
+      println("%d directories, %d files".format(dirNum, fileNum))
     } catch {
       case e: NullPointerException => println("[error opening dir]")
     }
