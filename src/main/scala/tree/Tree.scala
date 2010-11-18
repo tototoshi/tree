@@ -10,13 +10,19 @@ object Tree extends Application {
   private var dirNum = 0;
   private var fileNum = 0;
 
-
-
+  /**
+   * Linuxのlsコマンドのように特定のディレクトリ内のファイル一覧を取得する
+   * 隠しファイル、カレントディレクトリ、親ディレクトリは表示しない。
+   *
+   * @param dir ディレクトリ
+   * @return ディレクトリ内のファイル一覧
+   */
+  def ls(dir: File) :List[File] =
+    dir.listFiles.toList.remove(_.getName.startsWith("."))
 
   private def tree(dir: File, branch: String): List[String] = {
     var curStr:List[String] = Nil
-    val files = dir.listFiles.toList.
-                remove(_.getName.startsWith(".")).reverse
+    val files = ls(dir).reverse
 
     for (i <- 0 until files.length) {
       val name = files(i).getName
