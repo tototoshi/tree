@@ -3,7 +3,7 @@ package tree
 import java.io.File
 
 object Tree extends Application {
-  val indent = "    "
+  val offset = "    "
   val branch = "|-- "
   val trunk  = "|   "
   val edge   = "`-- "
@@ -25,29 +25,29 @@ object Tree extends Application {
    * コンソールに出力する文字列が入ったリストを返す
    *
    * @param dir ディレクトリ
-   * @param branch ?? //TODO
+   * @param indent インデント(ディレクトリ階層を潜っていくと積み上げられていく
    * @return コンソールに出力する文字列が入ったリスト
    */
-  private def tree(dir: File, branch: String): List[String] = {
+  private def tree(dir: File, indent: String): List[String] = {
     var curStr:List[String] = Nil
     val files = ls(dir).reverse
 
     for (i <- 0 until files.length) {
       val name = files(i).getName
-      val curBranch1 = if (i == files.length - 1) indent
+      val curBranch1 = if (i == files.length - 1) offset
                        else trunk
       val curBranch2 = if (i == files.length - 1) edge
-                       else "|-- "
+                       else branch
 
       files(i) match {
         case f if f.isDirectory => {
 	  dirNum += 1
-          curStr = tree(files(i), branch + curBranch1) :::
-          ((branch + curBranch2 + name) :: curStr)
+          curStr = tree(files(i), indent + curBranch1) :::
+          ((indent + curBranch2 + name) :: curStr)
 	}
 	case _ => {
           fileNum += 1
-          curStr = (branch + curBranch2 + name) :: curStr
+          curStr = (indent + curBranch2 + name) :: curStr
 	}
       }
     }
