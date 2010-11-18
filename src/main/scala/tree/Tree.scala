@@ -1,18 +1,24 @@
 package tree
 
+import java.io.File
+
 object Tree extends Application {
+  val indent = "    "
+  val branch = "|-- "
+  val trunk  = "|   "
+  val edge   = "`-- "
   private var dirNum = 0;
   private var fileNum = 0;
 
-  private def tree(dir: java.io.File, branch: String): List[String] = {
+  private def tree(dir: File, branch: String): List[String] = {
     var curStr:List[String] = Nil
     val files = dir.listFiles.toList.
                 filter(!_.getName.startsWith(".")).reverse
 
     for (i <- 0 until files.length) {
       val name = files(i).getName
-      val curBranch1 = if (i == files.length - 1) "    "
-                       else "|   "
+      val curBranch1 = if (i == files.length - 1) indent
+                       else trunk
       val curBranch2 = if (i == files.length - 1) "`-- "
                        else "|-- "
 
@@ -28,9 +34,15 @@ object Tree extends Application {
     curStr
   }
 
+
+  /**
+   *  main メソッド
+   *
+   * @param args
+   */
   override def main(args: Array[String]): Unit = {
     try {
-      val treeList = tree(new java.io.File(args(0)), "") ::: List(".")
+      val treeList = tree(new File(args(0)), "") ::: List(".")
       println(treeList.reverse.mkString("\n") +
               "\n\n%d directories, %d files".format(dirNum, fileNum))
     } catch {
