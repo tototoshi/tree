@@ -28,7 +28,7 @@ object Tree extends Application {
       val name = files(i).getName
       val curBranch1 = if (i == files.length - 1) indent
                        else trunk
-      val curBranch2 = if (i == files.length - 1) "`-- "
+      val curBranch2 = if (i == files.length - 1) edge
                        else "|-- "
 
       files(i) match {
