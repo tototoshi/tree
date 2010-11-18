@@ -3,11 +3,6 @@ package tree
 import java.io.File
 
 object Tree extends Application {
-  val offset = "    "
-  val branch = "|-- "
-  val trunk  = "|   "
-  val edge   = "`-- "
-
   private var dirNum = 0;
   private var fileNum = 0;
 
@@ -25,35 +20,40 @@ object Tree extends Application {
    * コンソールに出力する文字列が入ったリストを返す
    *
    * @param dir ディレクトリ
-   * @param indent インデント(ディレクトリ階層を潜っていくと積み上げられていく
+   * @param indent インデント(ディレクトリ階層を潜っていくと積み上げられていく)
    * @return コンソールに出力する文字列が入ったリスト
    */
-  private def tree(dir: File, indent: String): List[String] = {
-    var curStr:List[String] = Nil
+  private def tree(dir: File, indent: String = ""): Unit = {
+    val offset = "    "
+    val branch = "|-- "
+    val trunk  = "|   "
+    val edge   = "`-- "
+
     val files = ls(dir).reverse
 
     for (i <- 0 until files.length) {
-      val name = files(i).getName
+      val file = files(i)
+      val name = file.getName
+
       val curBranch1 = if (i == files.length - 1) offset
                        else trunk
+
       val curBranch2 = if (i == files.length - 1) edge
                        else branch
 
       files(i) match {
         case f if f.isDirectory => {
 	  dirNum += 1
-          curStr = tree(files(i), indent + curBranch1) :::
-          ((indent + curBranch2 + name) :: curStr)
+	  println(indent + curBranch2 + name)
+          tree(file, indent + curBranch1)
 	}
 	case _ => {
           fileNum += 1
-          curStr = (indent + curBranch2 + name) :: curStr
+          println(indent + curBranch2 + name)
 	}
       }
     }
-    curStr
   }
-
 
   /**
    *  main メソッド
@@ -62,8 +62,7 @@ object Tree extends Application {
    */
   override def main(args: Array[String]): Unit = {
     try {
-      val treeList = tree(new File(args(0)), "") ::: List(".")
-      println(treeList.reverse.mkString("\n"))
+      tree(new File(args(0)))
       println
       println("%d directories, %d files".format(dirNum, fileNum))
     } catch {
