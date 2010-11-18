@@ -31,13 +31,16 @@ object Tree extends Application {
       val curBranch2 = if (i == files.length - 1) "`-- "
                        else "|-- "
 
-      if (files(i).isDirectory) {
-        dirNum += 1
-        curStr = tree(files(i), branch + curBranch1) :::
-                  ((branch + curBranch2 + name) :: curStr)
-      } else {
-        fileNum += 1
-        curStr = (branch + curBranch2 + name) :: curStr
+      files(i) match {
+        case f if f.isDirectory() => {
+	  dirNum += 1
+          curStr = tree(files(i), branch + curBranch1) :::
+          ((branch + curBranch2 + name) :: curStr)
+	}
+	case _ => {
+          fileNum += 1
+          curStr = (branch + curBranch2 + name) :: curStr
+	}
       }
     }
     curStr
