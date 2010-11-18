@@ -7,6 +7,7 @@ object Tree extends Application {
   val branch = "|-- "
   val trunk  = "|   "
   val edge   = "`-- "
+
   private var dirNum = 0;
   private var fileNum = 0;
 
@@ -20,6 +21,13 @@ object Tree extends Application {
   def ls(dir: File) :List[File] =
     dir.listFiles.toList.remove(_.getName.startsWith("."))
 
+  /**
+   * コンソールに出力する文字列が入ったリストを返す
+   *
+   * @param dir ディレクトリ
+   * @param branch ?? //TODO
+   * @return コンソールに出力する文字列が入ったリスト
+   */
   private def tree(dir: File, branch: String): List[String] = {
     var curStr:List[String] = Nil
     val files = ls(dir).reverse
@@ -32,7 +40,7 @@ object Tree extends Application {
                        else "|-- "
 
       files(i) match {
-        case f if f.isDirectory() => {
+        case f if f.isDirectory => {
 	  dirNum += 1
           curStr = tree(files(i), branch + curBranch1) :::
           ((branch + curBranch2 + name) :: curStr)
