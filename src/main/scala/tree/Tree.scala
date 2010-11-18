@@ -19,7 +19,7 @@ object Tree extends Application {
    * @return ディレクトリ内のファイル一覧
    */
   def ls(dir: File) :List[File] =
-    dir.listFiles.toList.remove(_.getName.startsWith("."))
+    dir.listFiles.toList.filterNot(_.getName.startsWith("."))
 
   /**
    * コンソールに出力する文字列が入ったリストを返す
