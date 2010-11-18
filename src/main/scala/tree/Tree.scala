@@ -53,10 +53,10 @@ object Tree extends Application {
     try {
       val treeList = tree(new File(args(0)), "") ::: List(".")
       println(treeList.reverse.mkString("\n"))
-      println("")
+      println
       println("%d directories, %d files".format(dirNum, fileNum))
     } catch {
-      case e: NullPointerException => println("[error opening dir]")
+      case e: NullPointerException => println("[error: cannot open directory]")
     }
   }
 }
