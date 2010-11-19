@@ -1,10 +1,13 @@
 package tree
 
 import java.io.File
+import scala.annotation.tailrec
 
 object Tree extends Application {
-  private var dirNum = 0;
-  private var fileNum = 0;
+  val ____ = "    "
+  val |-- = "|-- "
+  val |   = "|   "
+  val \--   = "`-- "
 
   /**
    * Linuxのlsコマンドのように特定のディレクトリ内のファイル一覧を取得する
@@ -17,41 +20,40 @@ object Tree extends Application {
     dir.listFiles.toList.filterNot(_.getName.startsWith("."))
 
   /**
-   * コンソールに出力する文字列が入ったリストを返す
+   * ディレクトリーツリーを表示する。
    *
    * @param dir ディレクトリ
-   * @param indent インデント(ディレクトリ階層を潜っていくと積み上げられていく)
-   * @return コンソールに出力する文字列が入ったリスト
+   * @param indent ツリー表示用のインデント。ユーザが使うことはない。
+   * @return Unit
    */
-  private def tree(dir: File, indent: String = ""): Unit = {
-    val offset = "    "
-    val branch = "|-- "
-    val trunk  = "|   "
-    val edge   = "`-- "
+  def printTree(dir: File, indent: String = "") :Unit = {
+      printBranch(ls(dir), indent)
+  }
 
-    val files = ls(dir).reverse
-
-    for (i <- 0 until files.length) {
-      val file = files(i)
-      val name = file.getName
-
-      val curBranch1 = if (i == files.length - 1) offset
-                       else trunk
-
-      val curBranch2 = if (i == files.length - 1) edge
-                       else branch
-
-      files(i) match {
-        case f if f.isDirectory => {
-	  dirNum += 1
-	  println(indent + curBranch2 + name)
-          tree(file, indent + curBranch1)
-	}
-	case _ => {
-          fileNum += 1
-          println(indent + curBranch2 + name)
-	}
+  /**
+   * ディレクトリツリーの枝の一本一本を再帰的に描画する。
+   *
+   * @param files ファイルのリスト
+   * @param indent ツリー表示用のインデント。ユーザが使うことはない。
+   * @return Unit
+   *
+   */
+  @tailrec
+  def printBranch(files: List[File], indent: String): Unit = {
+    // TODO ifばっかりで汚いのであとでリファクタ
+    if (files.length == 0){
+      Unit
+    } else if (files.length == 1) {
+      println(indent + \--  + files.head.getName)
+      if (files.head.isDirectory) {
+        printTree(files.head, indent + ____)
       }
+    } else {
+      println(indent + |-- + files.head.getName)
+      if (files.head.isDirectory) {
+        printTree(files.head, indent + |)
+      }
+      printBranch(files.tail, indent)
     }
   }
 
@@ -61,12 +63,14 @@ object Tree extends Application {
    * @param args
    */
   override def main(args: Array[String]): Unit = {
-    try {
-      tree(new File(args(0)))
-      println
-      println("%d directories, %d files".format(dirNum, fileNum))
-    } catch {
-      case e: NullPointerException => println("[error: cannot open directory]")
+    val dir = new File(args.length match {
+      case 0 => "."
+      case _ => args(0)
+    })
+    if (!dir.isDirectory()) {
+      println("[Error] " + dir + " is not directory!")
+      exit(1)
     }
+    printTree(dir)
   }
 }

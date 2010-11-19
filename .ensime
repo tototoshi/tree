@@ -2,6 +2,10 @@
 
 (
 
+:project-name "tree"
+
+:server-root "/home/toshiyuki/.emacs.d/ensime"
+
 :project-package "tree"
 
 :use-sbt t
