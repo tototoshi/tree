@@ -16,8 +16,14 @@ object Tree extends Application {
    * @param dir ディレクトリ
    * @return ディレクトリ内のファイル一覧
    */
-  def ls(dir: File) :List[File] =
-    dir.listFiles.toList.filterNot(_.getName.startsWith("."))
+  def ls(dir: File) :Option[List[File]] = {
+    try {
+      Some(dir.listFiles.toList.filterNot(_.getName.startsWith(".")))
+    } catch {
+      case e: NullPointerException => println("Permission Denied. [%s]".format(dir))
+      None
+    }
+  }
 
   /**
    * ディレクトリーツリーを表示する。
@@ -27,7 +33,7 @@ object Tree extends Application {
    * @return Unit
    */
   def printTree(dir: File, indent: String = "") :Unit = {
-      printBranch(ls(dir), indent)
+      printBranch(ls(dir).getOrElse(Nil), indent)
   }
 
   /**
@@ -61,7 +67,7 @@ object Tree extends Application {
   /**
    *  main メソッド
    *
-   * @param args
+   * @param args ディレクトリ
    */
   override def main(args: Array[String]): Unit = {
     val dir = new File(args.length match {
