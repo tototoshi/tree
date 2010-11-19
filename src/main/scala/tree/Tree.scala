@@ -1,10 +1,15 @@
 package tree
 
 import java.io.File
+import scala.annotation.tailrec
 
 object Tree extends Application {
   private var dirNum = 0;
   private var fileNum = 0;
+  val offset = "    "
+  val branch = "|-- "
+  val trunk  = "|   "
+  val edge   = "`-- "
 
   /**
    * Linuxのlsコマンドのように特定のディレクトリ内のファイル一覧を取得する
@@ -16,43 +21,30 @@ object Tree extends Application {
   def ls(dir: File) :List[File] =
     dir.listFiles.toList.filterNot(_.getName.startsWith("."))
 
-  /**
-   * コンソールに出力する文字列が入ったリストを返す
-   *
-   * @param dir ディレクトリ
-   * @param indent インデント(ディレクトリ階層を潜っていくと積み上げられていく)
-   * @return コンソールに出力する文字列が入ったリスト
-   */
-  private def tree(dir: File, indent: String = ""): Unit = {
-    val offset = "    "
-    val branch = "|-- "
-    val trunk  = "|   "
-    val edge   = "`-- "
 
-    val files = ls(dir).reverse
-
-    for (i <- 0 until files.length) {
-      val file = files(i)
-      val name = file.getName
-
-      val curBranch1 = if (i == files.length - 1) offset
-                       else trunk
-
-      val curBranch2 = if (i == files.length - 1) edge
-                       else branch
-
-      files(i) match {
-        case f if f.isDirectory => {
-	  dirNum += 1
-	  println(indent + curBranch2 + name)
-          tree(file, indent + curBranch1)
-	}
-	case _ => {
-          fileNum += 1
-          println(indent + curBranch2 + name)
-	}
-      }
+  def printTree(file: File, indent: String = "") :Unit = {
+    if (file.isDirectory()) {
+      printBranch(ls(file), indent)
     }
+  }
+
+  @tailrec
+  def printBranch(files: List[File], indent: String): Unit = {
+    if (files.length == 0){
+      Unit
+    } else if (files.length == 1) {
+      println(indent + edge  + files.head.getName)
+      if (files.head.isDirectory) {
+        printTree(files.head, indent + offset)
+      }
+    } else {
+      println(indent + branch + files.head.getName)
+      if (files.head.isDirectory) {
+        printTree(files.head, indent + trunk)
+      }
+      printBranch(files.tail, indent)
+    }
+
   }
 
   /**
@@ -61,12 +53,9 @@ object Tree extends Application {
    * @param args
    */
   override def main(args: Array[String]): Unit = {
-    try {
-      tree(new File(args(0)))
-      println
-      println("%d directories, %d files".format(dirNum, fileNum))
-    } catch {
-      case e: NullPointerException => println("[error: cannot open directory]")
-    }
+//    tree(new File(args(0)))
+    printTree(new File(args(0)))
+    println
+    println("%d directories, %d files".format(dirNum, fileNum))
   }
 }
