@@ -1,0 +1,13 @@
+;; This config was generated using ensime-config-gen. Feel free to customize its contents manually. 
+
+(
+
+:project-name "tree"
+
+:server-root "/home/toshiyuki/.emacs.d/ensime"
+
+:project-package "tree"
+
+:use-sbt t
+
+)
