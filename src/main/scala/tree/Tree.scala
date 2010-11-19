@@ -21,15 +21,30 @@ object Tree extends Application {
   def ls(dir: File) :List[File] =
     dir.listFiles.toList.filterNot(_.getName.startsWith("."))
 
-
-  def printTree(file: File, indent: String = "") :Unit = {
-    if (file.isDirectory()) {
-      printBranch(ls(file), indent)
+  /**
+   * ディレクトリーツリーを表示する。
+   *
+   * @param dir ディレクトリ
+   * @param indent ツリー表示用のインデント。ユーザが使うことはない。
+   * @return Unit
+   */
+  def printTree(dir: File, indent: String = "") :Unit = {
+    if (dir.isDirectory()) {
+      printBranch(ls(dir), indent)
     }
   }
 
+  /**
+   * ディレクトリツリーの枝の一本一本を再帰的に描画する。
+   *
+   * @param files ファイルのリスト
+   * @param indent ツリー表示用のインデント。ユーザが使うことはない。
+   * @return Unit
+   *
+   */
   @tailrec
   def printBranch(files: List[File], indent: String): Unit = {
+    // TODO ifばっかりで汚いのであとでリファクタ
     if (files.length == 0){
       Unit
     } else if (files.length == 1) {
@@ -53,7 +68,6 @@ object Tree extends Application {
    * @param args
    */
   override def main(args: Array[String]): Unit = {
-//    tree(new File(args(0)))
     printTree(new File(args(0)))
     println
     println("%d directories, %d files".format(dirNum, fileNum))
