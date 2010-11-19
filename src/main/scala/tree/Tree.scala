@@ -29,9 +29,7 @@ object Tree extends Application {
    * @return Unit
    */
   def printTree(dir: File, indent: String = "") :Unit = {
-    if (dir.isDirectory()) {
       printBranch(ls(dir), indent)
-    }
   }
 
   /**
@@ -68,8 +66,13 @@ object Tree extends Application {
    * @param args
    */
   override def main(args: Array[String]): Unit = {
+    val dir = new File(args(0))
+    if (!dir.isDirectory()) {
+      println("[Error] " + dir + " is not directory!")
+      exit(1)
+    }
     printTree(new File(args(0)))
-    println
-    println("%d directories, %d files".format(dirNum, fileNum))
+//    println
+//    println("%d directories, %d files".format(dirNum, fileNum))
   }
 }
