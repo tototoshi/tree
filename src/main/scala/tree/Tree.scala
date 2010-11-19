@@ -4,12 +4,10 @@ import java.io.File
 import scala.annotation.tailrec
 
 object Tree extends Application {
-  private var dirNum = 0;
-  private var fileNum = 0;
-  val offset = "    "
-  val branch = "|-- "
-  val trunk  = "|   "
-  val edge   = "`-- "
+  val ____ = "    "
+  val |-- = "|-- "
+  val |   = "|   "
+  val \--   = "`-- "
 
   /**
    * Linuxのlsコマンドのように特定のディレクトリ内のファイル一覧を取得する
@@ -46,18 +44,17 @@ object Tree extends Application {
     if (files.length == 0){
       Unit
     } else if (files.length == 1) {
-      println(indent + edge  + files.head.getName)
+      println(indent + \--  + files.head.getName)
       if (files.head.isDirectory) {
-        printTree(files.head, indent + offset)
+        printTree(files.head, indent + ____)
       }
     } else {
-      println(indent + branch + files.head.getName)
+      println(indent + |-- + files.head.getName)
       if (files.head.isDirectory) {
-        printTree(files.head, indent + trunk)
+        printTree(files.head, indent + |)
       }
       printBranch(files.tail, indent)
     }
-
   }
 
   /**
@@ -66,13 +63,14 @@ object Tree extends Application {
    * @param args
    */
   override def main(args: Array[String]): Unit = {
-    val dir = new File(args(0))
+    val dir = new File(args.length match {
+      case 0 => "."
+      case _ => args(0)
+    })
     if (!dir.isDirectory()) {
       println("[Error] " + dir + " is not directory!")
       exit(1)
     }
-    printTree(new File(args(0)))
-//    println
-//    println("%d directories, %d files".format(dirNum, fileNum))
+    printTree(dir)
   }
 }
