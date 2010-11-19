@@ -8,10 +8,10 @@ object Tree extends Application {
   /*
    * コマンド結果の描画に使うパーツ群
    */
-  val ____ = "    "
-  val |-- = "|-- "
-  val |   = "|   "
-  val \--   = "`-- "
+  private val ____ = "    "
+  private val |-- = "|-- "
+  private val |   = "|   "
+  private val \--   = "`-- "
 
   /**
    * Linuxのlsコマンドのように特定のディレクトリ内のファイル一覧を取得する
@@ -20,7 +20,7 @@ object Tree extends Application {
    * @param dir ディレクトリ
    * @return ディレクトリ内のファイル一覧
    */
-  def ls(dir: File) :Option[List[File]] = {
+  private def ls(dir: File) :Option[List[File]] = {
     try {
       Some(dir.listFiles.toList.filterNot(_.getName.startsWith(".")))
     } catch {
@@ -37,7 +37,7 @@ object Tree extends Application {
    * @param indent ツリー表示用のインデント。ユーザが使うことはない。
    * @return Unit
    */
-  def printTree(dir: File, indent: String = "") :Unit = {
+  private def printTree(dir: File, indent: String = "") :Unit = {
       printBranch(ls(dir).getOrElse(Nil), indent)
   }
 
@@ -50,7 +50,7 @@ object Tree extends Application {
    *
    */
   @tailrec
-  def printBranch(files: List[File], indent: String): Unit = {
+  private def printBranch(files: List[File], indent: String): Unit = {
     files.length match {
       case 0 => Unit
       case 1 => {
