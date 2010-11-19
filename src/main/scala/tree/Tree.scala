@@ -4,6 +4,10 @@ import java.io.File
 import scala.annotation.tailrec
 
 object Tree extends Application {
+
+  /*
+   * コマンド結果の描画に使うパーツ群
+   */
   val ____ = "    "
   val |-- = "|-- "
   val |   = "|   "
@@ -20,6 +24,7 @@ object Tree extends Application {
     try {
       Some(dir.listFiles.toList.filterNot(_.getName.startsWith(".")))
     } catch {
+      // パーミッションがないディレクトリに対してlistFiles()を適用するとNullが飛ぶ
       case e: NullPointerException => println("Permission Denied. [%s]".format(dir))
       None
     }
@@ -65,7 +70,11 @@ object Tree extends Application {
   }
 
   /**
-   *  main メソッド
+   * main メソッド
+   * 引数でツリーのルートとなるディレクトリを指定する
+   * 指定のないときはカレントディレクトリをルートとする。
+   *
+   * 引数としてディレクトリ以外が指定されるとエラーとなる。
    *
    * @param args ディレクトリ
    */
