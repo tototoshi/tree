@@ -52,7 +52,7 @@ object Tree {
   @tailrec
   private def printBranch(files: List[File], indent: String): Unit = {
     files.length match {
-      case 0 => Unit
+      case 0 => ()
       case 1 => {
 	println(indent + \--  + files.head.getName)
 	if (files.head.isDirectory) {
