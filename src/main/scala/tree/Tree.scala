@@ -3,7 +3,7 @@ package tree
 import java.io.File
 import scala.annotation.tailrec
 
-object Tree extends Application {
+object Tree {
 
   /*
    * コマンド結果の描画に使うパーツ群
@@ -78,7 +78,7 @@ object Tree extends Application {
    *
    * @param args ディレクトリ
    */
-  override def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
     val dir = new File(args.length match {
       case 0 => "."
       case _ => args(0)
