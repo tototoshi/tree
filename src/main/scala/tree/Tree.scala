@@ -40,20 +40,21 @@ object Tree extends Application {
    */
   @tailrec
   def printBranch(files: List[File], indent: String): Unit = {
-    // TODO ifばっかりで汚いのであとでリファクタ
-    if (files.length == 0){
-      Unit
-    } else if (files.length == 1) {
-      println(indent + \--  + files.head.getName)
-      if (files.head.isDirectory) {
-        printTree(files.head, indent + ____)
+    files.length match {
+      case 0 => Unit
+      case 1 => {
+	println(indent + \--  + files.head.getName)
+	if (files.head.isDirectory) {
+          printTree(files.head, indent + ____)
+	}
       }
-    } else {
-      println(indent + |-- + files.head.getName)
-      if (files.head.isDirectory) {
-        printTree(files.head, indent + |)
+      case _ => {
+	println(indent + |-- + files.head.getName)
+	if (files.head.isDirectory) {
+          printTree(files.head, indent + |)
+	}
+	printBranch(files.tail, indent)
       }
-      printBranch(files.tail, indent)
     }
   }
 
