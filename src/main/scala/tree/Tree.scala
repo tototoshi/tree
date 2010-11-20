@@ -20,13 +20,13 @@ object Tree {
    * @param dir ディレクトリ
    * @return ディレクトリ内のファイル一覧
    */
-  private def ls(dir: File) :Option[List[File]] = {
+  private def ls(dir: File) :List[File] = {
     try {
-      Some(dir.listFiles.toList.filterNot(_.getName.startsWith(".")))
+      dir.listFiles.toList.filterNot(_.getName.startsWith("."))
     } catch {
       // パーミッションがないディレクトリに対してlistFiles()を適用するとNullが飛ぶ
       case e: NullPointerException => println("Permission Denied. [%s]".format(dir))
-      None
+      Nil
     }
   }
 
@@ -38,7 +38,7 @@ object Tree {
    * @return Unit
    */
   private def printTree(dir: File, indent: String = "") :Unit = {
-      printBranch(ls(dir).getOrElse(Nil), indent)
+      printBranch(ls(dir), indent)
   }
 
   /**
