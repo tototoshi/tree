@@ -79,14 +79,14 @@ object Tree {
    * @param args ディレクトリ
    */
   def main(args: Array[String]): Unit = {
-    val dir = new File(args.length match {
-      case 0 => "."
-      case _ => args(0)
-    })
+    val dir = new File(if (args.length == 0) "."
+		       else args(0))
+
     if (!dir.isDirectory()) {
       println("[Error] " + dir + " is not directory!")
       exit(1)
     }
+
     printTree(dir)
   }
 }
